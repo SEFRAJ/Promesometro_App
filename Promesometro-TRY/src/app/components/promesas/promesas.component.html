@@ -1,0 +1,149 @@
+<div class="main-container">
+    <header class="header-7">
+        <div class="branding">
+            <a [routerLink]="['/partidos']" class="nav-link">
+                <clr-icon shape="vm-bug"></clr-icon>
+                <span class="title">Promesometro</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <clr-dropdown>
+                <button class="nav-text" clrDropdownTrigger>
+                        {{this.usuario}}
+                        <clr-icon shape="caret down"></clr-icon>
+                    </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <a [routerLink]="['/login']" clrDropdownItem>Cerrar Secion</a>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+        </div>
+    </header>
+
+    <div class="content-container">
+
+        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed">
+            <a clrVerticalNavLink [routerLink]="['/partidos']" routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="accessibility-2" class="is-solid"></clr-icon>
+                Partidos
+            </a>
+            <div class="nav-divider"></div>
+            <a clrVerticalNavLink [routerLink]="['/creditos']"  routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="details" class="is-solid"></clr-icon>
+                Creditos
+            </a>
+        </clr-vertical-nav>
+
+        <div class="content-area">
+            <h1>Candidato: {{id.nombre}}</h1>
+            <button class="btn btn-outline" id="añadir" *ngIf="rol=='ADMINISTRADOR'" (click)="basic = true">Añadir Promesa</button>
+            
+            <div class="alert alert-danger" role="alert" *ngIf="status == 'Usted ya voto en esta promesa'">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                        {{status}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success" role="alert" *ngIf="status == 'promesa eliminada exitosamente'">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                            {{status}}
+                            </span>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="clr-row">
+                <div class="clr-col-lg-6 clr-col-12" *ngFor="let enc of datos">
+                    <div class="card clickable">
+                        <div class="card-header">
+                            {{enc.titulo}}
+                        </div>
+                        <div class="card-block">
+                            <div class="card-media-block">
+                                <div class="card-media-description">
+                                    <span class="card-media-title">
+                                               {{enc.descripcion}}
+                                            </span>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="progress-block">
+
+                                <div class="progress">
+                                    <progress max="100" value="{{enc.promedio1}}"></progress>
+                                </div>
+                                <span class="card-media-title" id="si">
+                                    Si: {{enc.si}}
+                                              </span>
+                                <br>
+                                <span class="card-media-title" id="no">
+                                                 {{enc.promedio1}}%
+                                                           </span>
+                            </div>
+                            <br>
+                            <div class="progress-block">
+
+                                <div class="progress">
+                                    <progress max="100" value="{{enc.promedio2}}"></progress>
+                                </div>
+                                <span class="card-media-title" id="si">
+                                       No: {{enc.no}}
+                                                 </span>
+                                <br>
+                                <span class="card-media-title" id="no">
+                                                    {{enc.promedio2}}%
+                                                              </span>
+                            </div>
+
+                            <span class="card-media-title">
+                                    Votar:
+                                      </span>
+                            <br>
+                            <button class="btn btn-sm btn-link" (click)="voto = true; addVoto(enc._id, 1,0)">Si</button>
+                            <button class="btn btn-sm btn-link" (click)="voto = false; addVoto(enc._id,0 ,1)">No</button>
+                            <button class="btn btn-danger" id="elim" *ngIf="rol=='ADMINISTRADOR'" (click)=" eliminarPromesa(enc._id)">Eliminar</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <clr-modal [(clrModalOpen)]="basic">
+            <h3 class="modal-title">Añadir Promesa</h3>
+            <div class="modal-body">
+
+                <form clrForm>
+                    <clr-input-container>
+                        <label>Titulo</label>
+                        <input clrInput placeholder="Nombre" name="nombre" [(ngModel)]="datoModel.titulo" />
+                    </clr-input-container>
+
+                    <clr-input-container>
+                        <label>Descripcion</label>
+                        <input clrInput placeholder="Descripcion" name="descripcion" [(ngModel)]="datoModel.descripcion" />
+                    </clr-input-container>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" (click)="basic = false" [clrLoading]="validateBtnState">Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="basic = false; addDato()" [clrLoading]="validateBtnState">Ok</button>
+            </div>
+        </clr-modal>

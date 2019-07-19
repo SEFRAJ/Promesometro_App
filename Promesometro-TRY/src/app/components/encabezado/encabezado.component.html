@@ -1,0 +1,19 @@
+<header class="header-7">
+    <div class="branding">
+        <a [routerLink]="['/partidos']" class="nav-link">
+            <clr-icon shape="vm-bug"></clr-icon>
+            <span class="title">Promesometro</span>
+        </a>
+    </div>
+    <div class="header-actions">
+        <clr-dropdown>
+            <button class="nav-text" clrDropdownTrigger>
+                {{this.identity.usuario}}
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <button  (click)="signOff()"  clrDropdownItem>Cerrar Secion</button>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+    </div>
+</header>

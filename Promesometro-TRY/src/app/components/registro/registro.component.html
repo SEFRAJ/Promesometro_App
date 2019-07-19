@@ -1,0 +1,23 @@
+<div class="login-wrapper">
+    <form class="login" #registroForm="ngForm" (ngSubmit)="registrar()">
+        <section class="title">
+            <h3 class="welcome">Registro</h3>
+            Promesometro
+            <h5 class="hint">Crea tu cuenta y contribuye con tu opinion</h5>
+        </section>
+        <div class="login-group">
+
+            <clr-input-container>
+                <input type="text" name="usuario" #usuario="ngModel" [(ngModel)]="user.usuario" id="usuario" clrInput placeholder="Usuario" />
+            </clr-input-container>
+            <clr-input-container>
+                <input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" id="email" clrInput placeholder="Email" />
+            </clr-input-container>
+            <clr-password-container>
+                <input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" id="password" clrPassword placeholder="Contraseña" />
+            </clr-password-container>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+            <a [routerLink]="['/login']" class="signup">Iniciar Sesion</a>
+        </div>
+    </form>
+</div>

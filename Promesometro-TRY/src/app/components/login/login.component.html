@@ -1,0 +1,24 @@
+<div class="login-wrapper">
+
+    <form class="login" #loginForm="ngForm" (ngSubmit)="login()">
+        <section class="title">
+            <h3 class="welcome">Bienvenido</h3>
+            Promesometro    <!-- Esto debe de ir en una etiquete label??-->
+            <h5 class="hint">¡Contribuye con tu opinion!</h5>
+        </section>
+        <div class="login-group">
+
+            <clr-input-container>
+                <input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" id="email" clrInput placeholder="Email" />
+            </clr-input-container>
+
+            <clr-password-container>
+                <input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" id="password" clrPassword placeholder="Contraseña" />
+            </clr-password-container>
+
+            <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
+            <a [routerLink]="['/registro']" class="signup">¿No tienes cuenta?. Registrate</a>
+        </div>
+    </form>
+
+</div>

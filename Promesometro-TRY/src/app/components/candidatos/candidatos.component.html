@@ -1,0 +1,148 @@
+<div class="main-container">
+    <header class="header-7">
+        <div class="branding">
+            <a [routerLink]="['/partidos']" class="nav-link">
+                <clr-icon shape="vm-bug"></clr-icon>
+                <span class="title">Promesometro</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <clr-dropdown>
+                <button class="nav-text" clrDropdownTrigger>
+                    {{this.usuario}}
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <a [routerLink]="['/login']" clrDropdownItem>Cerrar Secion</a>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+        </div>
+    </header>
+
+    <div class="content-container">
+
+        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed">
+            <a clrVerticalNavLink [routerLink]="['/partidos']" routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="accessibility-2" class="is-solid"></clr-icon>
+                Partidos
+            </a>
+            <div class="nav-divider"></div>
+            <a clrVerticalNavLink [routerLink]="['/creditos']"  routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="details" class="is-solid"></clr-icon>
+                Creditos
+            </a>
+        </clr-vertical-nav>
+
+        <div class="content-area">
+            <h1>Partido: {{id.nombre}}</h1>
+            <button class="btn btn-outline" id="añadir" *ngIf="this.rol=='ADMINISTRADOR'" (click)="basic = true">Añadir Candidato</button>
+
+            <div class="alert alert-success" role="alert" *ngIf="status == 'eliminacion exitosa del candidato'">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                        {{status}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-row">
+                <div class="clr-col-lg-6 clr-col-12" *ngFor="let enc of datos">
+                    <div class="card clickable">
+                        <div class="card-header">
+                            {{enc.nombre}}
+                        </div>
+                        <div class="card-block">
+                            <div class="card-media-block">
+                                <img src="{{url + 'obtener-imagen-candidato/' + enc.image}}" *ngIf="enc.image" class="card-media-image">
+                                <img src="../../../assets/perfil1.png" *ngIf="!enc.image" class="card-media-image">
+                                <div class="card-media-description">
+
+                                    <span class="card-media-text">
+                                        Cargo: {{enc.cargo}}
+                                    </span>
+                                    <span class="card-media-title">
+                                        Descripcion: {{enc.descripcion}}
+                                        </span>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+
+                            <div class="btn-group btn-primary">
+                                <button class="btn" (click)="Redi(enc._id,enc.nombre, enc.descripcion, enc.image, enc.cargo);">Promesas</button>
+                                 <button class="btn btn-success" *ngIf="rol=='ADMINISTRADOR'" id="ima" (click)="idC(enc._id); ima = true">Añadir Foto</button>
+                                <button class="btn btn-danger" *ngIf="rol=='ADMINISTRADOR'"  (click)="eliminarCandidato(enc._id)">Eliminar Candidato</button>
+                            </div>
+    
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<clr-modal [(clrModalOpen)]="basic">
+    <h3 class="modal-title">Añadir Canditato</h3>
+    <div class="modal-body">
+
+        <form clrForm>
+            <clr-input-container>
+                <label>Nombre</label>
+                <input clrInput placeholder="Nombre" name="nombre" [(ngModel)]="datoModel.nombre" />
+            </clr-input-container>
+
+            <clr-input-container>
+                <label>Descripcion</label>
+                <input clrInput placeholder="Descripcion" name="descripcion" [(ngModel)]="datoModel.descripcion" />
+            </clr-input-container>
+
+            <clr-input-container>
+                <label>Cargo</label>
+                <input clrInput placeholder="Descripcion" name="descripcion" [(ngModel)]="datoModel.cargo" />
+            </clr-input-container>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="basic = false" [clrLoading]="validateBtnState">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="basic = false; addDato()" [clrLoading]="validateBtnState">Ok</button>
+    </div>
+</clr-modal>
+
+<!--Imagen --------------------------->
+
+<clr-modal [(clrModalOpen)]="ima">
+    <h3 class="modal-title">Añadir Imagen de Candidato</h3>
+    <div class="modal-body">
+
+        <form clrForm>
+
+            <div class="input-group mb-3 ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-dark text-white" id="inputGroupFileAddon01">Foto</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" (change)="fileChangeEvent($event)" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Elegir Foto</label>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="ima = false" [clrLoading]="validateBtnState">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="ima = false; imagenCandidato()" [clrLoading]="validateBtnState">Ok</button>
+    </div>
+</clr-modal>

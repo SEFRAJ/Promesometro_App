@@ -1,0 +1,127 @@
+<app-encabezado></app-encabezado>
+<div class="main-container">
+
+
+    <div class="content-container">
+
+        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed">
+            <a clrVerticalNavLink [routerLink]="['/partidos']" routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="accessibility-2" class="is-solid"></clr-icon>
+                Partidos
+            </a>
+            <div class="nav-divider"></div>
+            <a clrVerticalNavLink [routerLink]="['/creditos']" routerLinkActive="active">
+                <clr-icon clrVerticalNavIcon shape="details" class="is-solid"></clr-icon>
+                Creditos
+            </a>
+        </clr-vertical-nav>
+
+        <div class="content-area">
+            <h1>Partidos Politicos</h1>
+            <button class="btn btn-outline" id="añadir" (click)="basic = true" *ngIf="rol=='ADMINISTRADOR'">Añadir Partido</button>
+
+            <div class="alert alert-success" role="alert" *ngIf="status == 'eliminacion exitosa del partido'">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                        {{status}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-row">
+
+                <div class="clr-col-lg-6 clr-col-12" *ngFor="let enc of partidos">
+
+                    <div class="card clickable">
+
+                        <div class="card-header">
+                            {{enc.nombre}}
+                        </div>
+
+                        <div class="card-block">
+                            <div class="card-media-block">
+                                <img src="{{url + 'obtener-imagen-partido/' + enc.image}}" *ngIf="enc.image" class="card-media-image">
+                                <img src="../../../assets/agrupacion.jpg" *ngIf="!enc.image" class="card-media-image">
+                                <div class="card-media-description">
+
+                                    <span class="card-media-text">
+                                        {{enc.descripcion}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+
+                            <div class="btn-group btn-primary">
+                                <button class="btn" (click)="Redi(enc._id,enc.nombre, enc.descripcion, enc.image);" [clrLoading]="validateBtnState">Candidatos</button>
+                                <button class="btn btn-success" *ngIf="rol=='ADMINISTRADOR'"  id="ima" (click)="idP(enc._id); ima = true">Añadir Foto</button>
+                                <button class="btn btn-danger" *ngIf="rol=='ADMINISTRADOR'" (click)="eliminarPartido(enc._id)">Eliminar Partido</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<clr-modal [(clrModalOpen)]="basic">
+    <h3 class="modal-title">Añadir Partido</h3>
+    <div class="modal-body">
+
+        <form clrForm>
+            <clr-input-container>
+                <label>Nombre</label>
+                <input clrInput placeholder="Nombre" name="nombre" [(ngModel)]="partidoModel.nombre" />
+            </clr-input-container>
+
+            <clr-input-container>
+                <label>Descripcion</label>
+                <input clrInput placeholder="Descripcion" name="descripcion" [(ngModel)]="partidoModel.descripcion" />
+            </clr-input-container>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="basic = false" [clrLoading]="validateBtnState">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="basic = false; addPartido()" [clrLoading]="validateBtnState">Ok</button>
+    </div>
+</clr-modal>
+
+<!--Imagen --------------------------->
+
+<clr-modal [(clrModalOpen)]="ima">
+    <h3 class="modal-title">Añadir Imagen de Partido</h3>
+    <div class="modal-body">
+
+        <form clrForm>
+
+            <div class="input-group mb-3 ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-dark text-white" id="inputGroupFileAddon01">Foto</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" (change)="fileChangeEvent($event)" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Elegir Foto</label>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="ima = false" [clrLoading]="validateBtnState">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="ima = false; imagenPartido()" [clrLoading]="validateBtnState">Ok</button>
+    </div>
+</clr-modal>
